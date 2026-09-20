@@ -1,0 +1,18 @@
+[
+  {
+    "id": "payment_methods_001",
+    "prompt": "Which payment methods are supported?",
+    "expected_facts": [
+      "Visa",
+      "Mastercard",
+      "Apple Pay"
+    ]
+  },
+  {
+    "id": "delivery_001",
+    "prompt": "How long does standard delivery take?",
+    "expected_facts": [
+      "2 to 3 business days"
+    ]
+  }
+]
