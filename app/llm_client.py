@@ -6,13 +6,14 @@ from openai import OpenAI
 
 def get_response(
         prompt: str,
+        context: str,
 ) -> tuple[str, float]:
 
-    if os.getenv("USE_MOCK_LLM") == "true":
+    if os.getenv("USE_MOCK_LLM", "").lower() == "true":
         start_time = time.perf_counter()
 
-        mock_response = (
-            "We support Visa, Mastercard, and Apple Pay."
+        mock_response = get_mock_response(
+            prompt,
         )
 
         latency = (
@@ -33,11 +34,23 @@ def get_response(
         api_key=api_key,
     )
 
+    input_text = f"""
+Use the following reference information to answer the question.
+
+Reference:
+{context}
+
+Question:
+{prompt}
+
+Answer using only information supported by the reference.
+"""
+
     start_time = time.perf_counter()
 
     response = client.responses.create(
         model="gpt-5-mini",
-        input=prompt,
+        input=input_text,
     )
 
     latency = (
@@ -48,4 +61,28 @@ def get_response(
     return (
         response.output_text,
         latency,
+    )
+
+
+def get_mock_response(
+        prompt: str,
+) -> str:
+
+    prompt_lower = prompt.lower()
+
+    if "payment" in prompt_lower:
+        return (
+            "We support Visa, Mastercard, "
+            "and Apple Pay."
+        )
+
+    if "delivery" in prompt_lower:
+        return (
+            "Standard delivery takes "
+            "2 to 3 business days."
+        )
+
+    return (
+        "No mock response is configured "
+        "for this question."
     )

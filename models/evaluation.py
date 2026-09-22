@@ -1,13 +1,20 @@
 from pydantic import BaseModel
+
+
 class EvaluationCase(BaseModel):
     id: str
     prompt: str
+    context: str
     expected_facts: list[str]
+
+
 class MetricResult(BaseModel):
     metric: str
     score: float
     passed: bool
     reason: str
+
+
 class EvaluationResult(BaseModel):
     case_id: str
     prompt: str
@@ -15,3 +22,9 @@ class EvaluationResult(BaseModel):
     metrics: list[MetricResult]
     overall_score: float
     passed: bool
+
+
+class JudgeResult(BaseModel):
+    score: float
+    passed: bool
+    reason: str
